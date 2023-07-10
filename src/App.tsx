@@ -1,9 +1,11 @@
 import React from 'react';
 import './App.css';
-import {DocumentNode, useQuery} from '@apollo/client';
+import {DocumentNode, QueryResult, useQuery} from '@apollo/client';
 import {gql} from './__generated__/gql';
+import {TypedDocumentNode} from "@graphql-typed-document-node/core";
+import {ArticlesQuery, ArticlesQueryVariables} from "./__generated__/graphql";
 
-const GET_ARTICLES = gql(/* GraphQL */ `
+const GET_ARTICLES: TypedDocumentNode<ArticlesQuery, ArticlesQueryVariables> = gql(/* GraphQL */ `
   query ARTICLES {
     searchArticle(query: "artificial") {
       totalCount
@@ -22,7 +24,7 @@ export function DisplayArticles() {
 
     console.log(GET_ARTICLES)
 
-    const {loading, data} = useQuery(
+    const {loading, data}: QueryResult<ArticlesQuery, ArticlesQueryVariables> = useQuery(
         GET_ARTICLES
     );
 
