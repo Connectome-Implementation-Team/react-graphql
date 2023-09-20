@@ -1,15 +1,17 @@
 import React from 'react';
 import './App.css';
-import {DocumentNode, QueryResult, useQuery} from '@apollo/client';
+import {DocumentNode, InMemoryCache, QueryResult, useQuery} from '@apollo/client';
 import {gql} from './__generated__/gql';
 import {TypedDocumentNode} from "@graphql-typed-document-node/core";
-import {ArticlesQuery, ArticlesQueryVariables} from "./__generated__/graphql";
+import {ArticleList} from "./ArticleList";
+import {ScholarlyArticleEdge} from "./__generated__/graphql";
 
-const GET_ARTICLES: TypedDocumentNode<ArticlesQuery, ArticlesQueryVariables> = gql(/* GraphQL */ `
-  query ARTICLES {
-    searchArticle(query: "artificial") {
+const GET_ARTICLES = gql(/* GraphQL */ `
+  query ARTICLES($first: Int, $after: String) {
+    searchArticle(query: "artificial", first: $first, after: $after) {
       totalCount
       edges {
+      cursor
         node {
           iri
           name
@@ -22,10 +24,14 @@ const GET_ARTICLES: TypedDocumentNode<ArticlesQuery, ArticlesQueryVariables> = g
 
 export function DisplayArticles() {
 
-    console.log(GET_ARTICLES)
-
-    const {loading, data}: QueryResult<ArticlesQuery, ArticlesQueryVariables> = useQuery(
-        GET_ARTICLES
+    const {loading, data, fetchMore} = useQuery(
+        GET_ARTICLES,
+        {
+            variables: {
+                first: 10,
+                after: undefined
+            }
+        }
     );
 
     return (
@@ -35,10 +41,17 @@ export function DisplayArticles() {
                 <p>Loading ...</p>
             ) : (
                 <div>
-                    <span>{data && data?.searchArticle.totalCount}</span>
-                    <ul>
-                        {data && data.searchArticle?.edges?.map(edge => (<li key={edge.node.iri}><a href={edge.node.sameAs ? edge.node.sameAs[0] : undefined } target="_blank no-referrer">{edge.node.name}</a></li>))}
-                    </ul>
+                <span>{data?.searchArticle?.totalCount}</span>
+
+                <ArticleList
+                    articles={data?.searchArticle?.edges || []}
+                    onLoadMore={() => fetchMore({
+                        variables: {
+                            after: (data?.searchArticle?.edges as ScholarlyArticleEdge[])[(data?.searchArticle?.edges as ScholarlyArticleEdge[]).length - 1].cursor
+                        },
+                    })}
+                />
+
                 </div>
             )}
         </div>

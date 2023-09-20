@@ -55,6 +55,14 @@ export type BookEdge = {
   node: Book;
 };
 
+export type CreativeWorkUnion = Book | Dataset | ScholarlyArticle;
+
+export type CreativeWorkUnionEdge = {
+  __typename?: 'CreativeWorkUnionEdge';
+  cursor: Scalars['String']['output'];
+  node: CreativeWorkUnion;
+};
+
 /** A data download */
 export type DataDownload = Thing & {
   __typename?: 'DataDownload';
@@ -165,6 +173,14 @@ export type PaginatedBook = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type PaginatedCreativeWorkUnion = {
+  __typename?: 'PaginatedCreativeWorkUnion';
+  edges?: Maybe<Array<CreativeWorkUnionEdge>>;
+  hasNextPage: Scalars['Boolean']['output'];
+  nodes?: Maybe<Array<CreativeWorkUnion>>;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type PaginatedDataset = {
   __typename?: 'PaginatedDataset';
   edges?: Maybe<Array<DatasetEdge>>;
@@ -242,8 +258,23 @@ export type PersonEdge = {
 
 export type PersonOrganizationUnion = Organization | Person;
 
+/** Providers of the Connectome. */
+export enum Provider {
+  Aramis = 'aramis',
+  Boris = 'boris',
+  Cordis = 'cordis',
+  Lory = 'lory',
+  Openalex = 'openalex',
+  Opendata = 'opendata',
+  Serval = 'serval',
+  Snsf = 'snsf',
+  Zora = 'zora'
+}
+
 export type Query = {
   __typename?: 'Query';
+  /** Search for related Open Access publications */
+  getRelatedCreativeWork: PaginatedCreativeWorkUnion;
   /** Search for resources such as scholarly articles, research projects etc. */
   search: PaginatedResultUnion;
   /** Search for scholarly articles */
@@ -258,6 +289,14 @@ export type Query = {
   searchPerson: PaginatedPerson;
   /** Search for research projects */
   searchResearchProject: PaginatedResearchProject;
+};
+
+
+export type QueryGetRelatedCreativeWorkArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  identifier: Scalars['String']['input'];
+  provider: Provider;
 };
 
 
@@ -419,10 +458,13 @@ export type Thing = {
   sameAs?: Maybe<Array<Scalars['String']['output']>>;
 };
 
-export type ArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+export type ArticlesQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', searchArticle: { __typename?: 'PaginatedScholarlyArticle', totalCount: number, edges?: Array<{ __typename?: 'ScholarlyArticleEdge', node: { __typename?: 'ScholarlyArticle', iri: string, name: string, sameAs?: Array<string> | null } }> | null } };
+export type ArticlesQuery = { __typename?: 'Query', searchArticle: { __typename?: 'PaginatedScholarlyArticle', totalCount: number, edges?: Array<{ __typename?: 'ScholarlyArticleEdge', cursor: string, node: { __typename?: 'ScholarlyArticle', iri: string, name: string, sameAs?: Array<string> | null } }> | null } };
 
 
-export const ArticlesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ARTICLES"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchArticle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"StringValue","value":"artificial","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"iri"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sameAs"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ArticlesQuery, ArticlesQueryVariables>;
+export const ArticlesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ARTICLES"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchArticle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"StringValue","value":"artificial","block":false}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"iri"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sameAs"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ArticlesQuery, ArticlesQueryVariables>;
