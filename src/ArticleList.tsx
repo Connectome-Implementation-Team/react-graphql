@@ -1,12 +1,11 @@
 import React from "react";
-import {ScholarlyArticleEdge} from "./__generated__/graphql";
+import {Maybe, ScholarlyArticleEdge} from "./__generated__/graphql";
 
-// @ts-ignore
-export const ArticleList = ({articleEdges, onLoadMore}) => {
+export const ArticleList = ({articleEdges, onLoadMore}: { articleEdges: Maybe<ScholarlyArticleEdge[]>, onLoadMore: () => void }) => {
 
     return (
 
-        articleEdges.length === 0 ? (
+        articleEdges === null ? (
             <div>No results yet</div>
         ) : (
             <div>
