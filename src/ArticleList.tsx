@@ -1,22 +1,25 @@
 import React from "react";
+import {ScholarlyArticleEdge} from "./__generated__/graphql";
 
 // @ts-ignore
-export const ArticleList = ({articles, onLoadMore}) => {
+export const ArticleList = ({articleEdges, onLoadMore}) => {
 
     return (
 
-        articles.length === 0 ? (
+        articleEdges.length === 0 ? (
             <div>No results yet</div>
         ) : (
             <div>
                 <ul>
-                    {articles?.map((edge: any) => (
+                    {articleEdges?.map((edge: ScholarlyArticleEdge) => (
+
                         <li key={edge?.node.iri}><a href={edge?.node.sameAs ? edge.node.sameAs[0] : undefined}
                                                     target="_blank no-referrer">{edge?.node.name}</a></li>))}
                 </ul>
 
                 <button onClick={onLoadMore}>Load More</button>
             </div>
+
         )
     )
 

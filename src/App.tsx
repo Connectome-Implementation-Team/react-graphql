@@ -57,7 +57,7 @@ export function DisplayArticles() {
                     <span>{data?.searchArticle?.totalCount}</span>
 
                     <ArticleList
-                        articles={data?.searchArticle?.edges || []}
+                        articleEdges={data?.searchArticle?.edges || []}
                         onLoadMore={() => fetchMore({
                             variables: {
                                 after: (data?.searchArticle?.edges as ScholarlyArticleEdge[])[(data?.searchArticle?.edges as ScholarlyArticleEdge[]).length - 1]?.cursor
