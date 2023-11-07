@@ -42,7 +42,7 @@ export type Book = Thing & {
   /** Open Access */
   isAccessibleForFree?: Maybe<Scalars['Boolean']['output']>;
   /** Keywords describing the content */
-  keywords?: Maybe<Array<Scalars['String']['output']>>;
+  keywords?: Maybe<Array<StringIriUnion>>;
   /** name (title) of the resource */
   name: Scalars['String']['output'];
   /** Standard identifier (DOI, ORCID etc.) */
@@ -89,7 +89,7 @@ export type DataDownload = Thing & {
   /** Open Access */
   isAccessibleForFree?: Maybe<Scalars['Boolean']['output']>;
   /** Keywords describing the content */
-  keywords?: Maybe<Array<Scalars['String']['output']>>;
+  keywords?: Maybe<Array<StringIriUnion>>;
   /** name (title) of the resource */
   name: Scalars['String']['output'];
   /** Standard identifier (DOI, ORCID etc.) */
@@ -122,7 +122,7 @@ export type Dataset = Thing & {
   /** Open Access */
   isAccessibleForFree?: Maybe<Scalars['Boolean']['output']>;
   /** Keywords describing the content */
-  keywords?: Maybe<Array<Scalars['String']['output']>>;
+  keywords?: Maybe<Array<StringIriUnion>>;
   /** name (title) of the resource */
   name: Scalars['String']['output'];
   /** Standard identifier (DOI, ORCID etc.) */
@@ -141,6 +141,11 @@ export type IntBox = {
 };
 
 export type IntStringUnion = IntBox | StringBox;
+
+export type IriBox = {
+  __typename?: 'IriBox';
+  iriValue: Scalars['String']['output'];
+};
 
 /** An organization */
 export type Organization = Thing & {
@@ -268,13 +273,18 @@ export enum Provider {
   Opendata = 'opendata',
   Serval = 'serval',
   Snsf = 'snsf',
+  Swissubase = 'swissubase',
   Zora = 'zora'
 }
 
 export type Query = {
   __typename?: 'Query';
+  /** Fetch a resource */
+  fetch: ResultUnion;
   /** Search for related Open Access publications */
   getRelatedCreativeWork: PaginatedCreativeWorkUnion;
+  /** Search for creative works suggested by neural search */
+  getSuggestedEntityByNeuralSearch: PaginatedCreativeWorkUnion;
   /** Search for resources such as scholarly articles, research projects etc. */
   search: PaginatedResultUnion;
   /** Search for scholarly articles */
@@ -292,11 +302,23 @@ export type Query = {
 };
 
 
+export type QueryFetchArgs = {
+  iri: Scalars['ID']['input'];
+};
+
+
 export type QueryGetRelatedCreativeWorkArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   identifier: Scalars['String']['input'];
   provider: Provider;
+};
+
+
+export type QueryGetSuggestedEntityByNeuralSearchArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  query: Scalars['String']['input'];
 };
 
 
@@ -420,7 +442,7 @@ export type ScholarlyArticle = Thing & {
   /** Open Access */
   isAccessibleForFree?: Maybe<Scalars['Boolean']['output']>;
   /** Keywords describing the content */
-  keywords?: Maybe<Array<Scalars['String']['output']>>;
+  keywords?: Maybe<Array<StringIriUnion>>;
   /** name (title) of the resource */
   name: Scalars['String']['output'];
   /** End page */
@@ -441,6 +463,8 @@ export type StringBox = {
   __typename?: 'StringBox';
   stringValue: Scalars['String']['output'];
 };
+
+export type StringIriUnion = IriBox | StringBox;
 
 /** Thing is the base type of all other types */
 export type Thing = {

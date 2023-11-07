@@ -3,11 +3,30 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {ApolloClient, ApolloProvider, gql, InMemoryCache} from "@apollo/client";
+import {ApolloClient, ApolloProvider, createHttpLink, gql, InMemoryCache} from "@apollo/client";
 import {PaginatedScholarlyArticle} from "./__generated__/graphql";
+import {setContext} from "@apollo/client/link/context";
+
+const httpLink = createHttpLink({
+    uri: 'https://opendatanavigator-test.switch.ch/api/graphql',
+});
+
+// https://www.apollographql.com/docs/react/networking/authentication/
+const authLink = setContext((_, { headers }) => {
+
+    const token = '';
+    // return the headers to the context so httpLink can read them
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : "",
+        }
+    }
+});
 
 const client = new ApolloClient({
-    uri: 'https://opendatanavigator-test.switch.ch/api/graphql',
+    //uri: 'https://opendatanavigator-test.switch.ch/api/graphql',
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache({
         typePolicies: {
             Query: {
