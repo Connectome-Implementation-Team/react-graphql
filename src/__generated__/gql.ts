@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query ARTICLES($query: String!, $first: Int, $after: String) {\n    searchArticle(query: $query, first: $first, after: $after) {\n      totalCount\n      edges {\n      cursor\n        node {\n          iri\n          name\n          sameAs\n        }\n      }\n    }\n  }\n": types.ArticlesDocument,
+    "\n  query ARTICLES($query: String!, $first: Int, $after: String) {\n    searchArticle(query: $query, first: $first, after: $after) {\n      totalCount\n      edges {\n      cursor\n        node {\n          iri\n          name\n          sameAs\n          abstract\n          author {\n            __typename\n            ... on Person {\n                name\n                sameAs\n            }\n          }\n        }\n      }\n    }\n  }\n": types.ArticlesDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query ARTICLES($query: String!, $first: Int, $after: String) {\n    searchArticle(query: $query, first: $first, after: $after) {\n      totalCount\n      edges {\n      cursor\n        node {\n          iri\n          name\n          sameAs\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query ARTICLES($query: String!, $first: Int, $after: String) {\n    searchArticle(query: $query, first: $first, after: $after) {\n      totalCount\n      edges {\n      cursor\n        node {\n          iri\n          name\n          sameAs\n        }\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query ARTICLES($query: String!, $first: Int, $after: String) {\n    searchArticle(query: $query, first: $first, after: $after) {\n      totalCount\n      edges {\n      cursor\n        node {\n          iri\n          name\n          sameAs\n          abstract\n          author {\n            __typename\n            ... on Person {\n                name\n                sameAs\n            }\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query ARTICLES($query: String!, $first: Int, $after: String) {\n    searchArticle(query: $query, first: $first, after: $after) {\n      totalCount\n      edges {\n      cursor\n        node {\n          iri\n          name\n          sameAs\n          abstract\n          author {\n            __typename\n            ... on Person {\n                name\n                sameAs\n            }\n          }\n        }\n      }\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

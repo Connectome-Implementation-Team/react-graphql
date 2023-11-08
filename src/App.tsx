@@ -15,6 +15,14 @@ const GET_ARTICLES = gql(/* GraphQL */ `
           iri
           name
           sameAs
+          abstract
+          author {
+            __typename
+            ... on Person {
+                name
+                sameAs
+            }
+          }
         }
       }
     }
