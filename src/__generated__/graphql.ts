@@ -21,6 +21,8 @@ export type Scalars = {
 /** A book publication */
 export type Book = Thing & {
   __typename?: 'Book';
+  /** Relation to another resource */
+  about?: Maybe<Array<ResultUnion>>;
   /** Abstract summarizing the content */
   abstract?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
@@ -47,6 +49,8 @@ export type Book = Thing & {
   name: Scalars['String']['output'];
   /** Standard identifier (DOI, ORCID etc.) */
   sameAs?: Maybe<Array<Scalars['String']['output']>>;
+  /** Spatial information */
+  spatialCoverage?: Maybe<Array<Place>>;
 };
 
 export type BookEdge = {
@@ -66,6 +70,8 @@ export type CreativeWorkUnionEdge = {
 /** A data download */
 export type DataDownload = Thing & {
   __typename?: 'DataDownload';
+  /** Relation to another resource */
+  about?: Maybe<Array<ResultUnion>>;
   /** Abstract summarizing the content */
   abstract?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
@@ -94,11 +100,15 @@ export type DataDownload = Thing & {
   name: Scalars['String']['output'];
   /** Standard identifier (DOI, ORCID etc.) */
   sameAs?: Maybe<Array<Scalars['String']['output']>>;
+  /** Spatial information */
+  spatialCoverage?: Maybe<Array<Place>>;
 };
 
 /** A dataset */
 export type Dataset = Thing & {
   __typename?: 'Dataset';
+  /** Relation to another resource */
+  about?: Maybe<Array<ResultUnion>>;
   /** Abstract summarizing the content */
   abstract?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
@@ -127,12 +137,35 @@ export type Dataset = Thing & {
   name: Scalars['String']['output'];
   /** Standard identifier (DOI, ORCID etc.) */
   sameAs?: Maybe<Array<Scalars['String']['output']>>;
+  /** Spatial information */
+  spatialCoverage?: Maybe<Array<Place>>;
 };
 
 export type DatasetEdge = {
   __typename?: 'DatasetEdge';
   cursor: Scalars['String']['output'];
   node: Dataset;
+};
+
+/** A geo coordinate */
+export type GeoCoordinates = Thing & {
+  __typename?: 'GeoCoordinates';
+  /** Alternate name of the resource */
+  alternateName?: Maybe<Scalars['String']['output']>;
+  /** Description of the resource */
+  description?: Maybe<Scalars['String']['output']>;
+  /** Identifier of the resource */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** Connectome identifier of the resource */
+  iri: Scalars['ID']['output'];
+  /** Latitude of a geo coordinate. */
+  latitude?: Maybe<Scalars['Float']['output']>;
+  /** Longitude of a geo coordinate. */
+  longitude?: Maybe<Scalars['Float']['output']>;
+  /** name (title) of the resource */
+  name: Scalars['String']['output'];
+  /** Standard identifier (DOI, ORCID etc.) */
+  sameAs?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type IntBox = {
@@ -263,14 +296,41 @@ export type PersonEdge = {
 
 export type PersonOrganizationUnion = Organization | Person;
 
+/** A place */
+export type Place = Thing & {
+  __typename?: 'Place';
+  /** A place's address. */
+  address?: Maybe<Scalars['String']['output']>;
+  /** Alternate name of the resource */
+  alternateName?: Maybe<Scalars['String']['output']>;
+  /** Description of the resource */
+  description?: Maybe<Scalars['String']['output']>;
+  /** A place's geo coordinates. */
+  geo?: Maybe<GeoCoordinates>;
+  /** Identifier of the resource */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** Connectome identifier of the resource */
+  iri: Scalars['ID']['output'];
+  /** name (title) of the resource */
+  name: Scalars['String']['output'];
+  /** Standard identifier (DOI, ORCID etc.) */
+  sameAs?: Maybe<Array<Scalars['String']['output']>>;
+  /** A telephone number. */
+  telephone?: Maybe<Scalars['String']['output']>;
+};
+
 /** Providers of the Connectome. */
 export enum Provider {
+  Alexandria = 'alexandria',
   Aramis = 'aramis',
   Boris = 'boris',
   Cordis = 'cordis',
+  Dasch = 'dasch',
   Lory = 'lory',
+  Memobase = 'memobase',
   Openalex = 'openalex',
   Opendata = 'opendata',
+  Orcid = 'orcid',
   Serval = 'serval',
   Snsf = 'snsf',
   Swissubase = 'swissubase',
@@ -283,12 +343,10 @@ export type Query = {
   fetch: ResultUnion;
   /** Search for related Open Access publications */
   getRelatedCreativeWork: PaginatedCreativeWorkUnion;
-  /** Search for creative works suggested by neural search */
-  getSuggestedEntityByNeuralSearch: PaginatedCreativeWorkUnion;
-  /** Search for resources such as scholarly articles, research projects etc. */
+  /** Search for resources suggested by neural search */
+  getSuggestionByNeuralSearch: PaginatedResultUnion;
+  /** Search for resources such as scholarly articles, books, research projects etc. */
   search: PaginatedResultUnion;
-  /** Search for scholarly articles */
-  searchArticle: PaginatedScholarlyArticle;
   /** Search for books */
   searchBook: PaginatedBook;
   /** Search for datasets */
@@ -299,6 +357,8 @@ export type Query = {
   searchPerson: PaginatedPerson;
   /** Search for research projects */
   searchResearchProject: PaginatedResearchProject;
+  /** Search for scholarly articles. */
+  searchScholarlyArticle: PaginatedScholarlyArticle;
 };
 
 
@@ -315,7 +375,7 @@ export type QueryGetRelatedCreativeWorkArgs = {
 };
 
 
-export type QueryGetSuggestedEntityByNeuralSearchArgs = {
+export type QueryGetSuggestionByNeuralSearchArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   query: Scalars['String']['input'];
@@ -325,21 +385,16 @@ export type QueryGetSuggestedEntityByNeuralSearchArgs = {
 export type QuerySearchArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  provider?: InputMaybe<Provider>;
   query: Scalars['String']['input'];
   type?: InputMaybe<ResourceType>;
-};
-
-
-export type QuerySearchArticleArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  query: Scalars['String']['input'];
 };
 
 
 export type QuerySearchBookArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  provider?: InputMaybe<Provider>;
   query: Scalars['String']['input'];
 };
 
@@ -347,6 +402,7 @@ export type QuerySearchBookArgs = {
 export type QuerySearchDatasetArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  provider?: InputMaybe<Provider>;
   query: Scalars['String']['input'];
 };
 
@@ -354,6 +410,7 @@ export type QuerySearchDatasetArgs = {
 export type QuerySearchOrganizationArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  provider?: InputMaybe<Provider>;
   query: Scalars['String']['input'];
 };
 
@@ -361,6 +418,7 @@ export type QuerySearchOrganizationArgs = {
 export type QuerySearchPersonArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  provider?: InputMaybe<Provider>;
   query: Scalars['String']['input'];
 };
 
@@ -368,6 +426,15 @@ export type QuerySearchPersonArgs = {
 export type QuerySearchResearchProjectArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  provider?: InputMaybe<Provider>;
+  query: Scalars['String']['input'];
+};
+
+
+export type QuerySearchScholarlyArticleArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  provider?: InputMaybe<Provider>;
   query: Scalars['String']['input'];
 };
 
@@ -421,6 +488,8 @@ export type ResultUnionEdge = {
 /** A text published as a scholarly article */
 export type ScholarlyArticle = Thing & {
   __typename?: 'ScholarlyArticle';
+  /** Relation to another resource */
+  about?: Maybe<Array<ResultUnion>>;
   /** Abstract summarizing the content */
   abstract?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
@@ -451,6 +520,8 @@ export type ScholarlyArticle = Thing & {
   pageStart?: Maybe<IntStringUnion>;
   /** Standard identifier (DOI, ORCID etc.) */
   sameAs?: Maybe<Array<Scalars['String']['output']>>;
+  /** Spatial information */
+  spatialCoverage?: Maybe<Array<Place>>;
 };
 
 export type ScholarlyArticleEdge = {
@@ -489,7 +560,7 @@ export type ArticlesQueryVariables = Exact<{
 }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', searchArticle: { __typename?: 'PaginatedScholarlyArticle', totalCount: number, edges?: Array<{ __typename?: 'ScholarlyArticleEdge', cursor: string, node: { __typename?: 'ScholarlyArticle', iri: string, name: string, sameAs?: Array<string> | null, abstract?: string | null, author: Array<{ __typename: 'Organization' } | { __typename: 'Person', name: string, sameAs?: Array<string> | null }> } }> | null } };
+export type ArticlesQuery = { __typename?: 'Query', searchScholarlyArticle: { __typename?: 'PaginatedScholarlyArticle', totalCount: number, edges?: Array<{ __typename?: 'ScholarlyArticleEdge', cursor: string, node: { __typename?: 'ScholarlyArticle', iri: string, name: string, sameAs?: Array<string> | null, abstract?: string | null, author: Array<{ __typename: 'Organization' } | { __typename: 'Person', name: string, sameAs?: Array<string> | null }> } }> | null } };
 
 
-export const ArticlesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ARTICLES"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"query"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchArticle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"Variable","name":{"kind":"Name","value":"query"}}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"iri"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sameAs"}},{"kind":"Field","name":{"kind":"Name","value":"abstract"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Person"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sameAs"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ArticlesQuery, ArticlesQueryVariables>;
+export const ArticlesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ARTICLES"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"query"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchScholarlyArticle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"Variable","name":{"kind":"Name","value":"query"}}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"iri"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sameAs"}},{"kind":"Field","name":{"kind":"Name","value":"abstract"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Person"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sameAs"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ArticlesQuery, ArticlesQueryVariables>;

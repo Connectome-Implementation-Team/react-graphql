@@ -7,7 +7,7 @@ import {ScholarlyArticleEdge} from "./__generated__/graphql";
 
 const GET_ARTICLES = gql(/* GraphQL */ `
   query ARTICLES($query: String!, $first: Int, $after: String) {
-    searchArticle(query: $query, first: $first, after: $after) {
+    searchScholarlyArticle(query: $query, first: $first, after: $after) {
       totalCount
       edges {
       cursor
@@ -62,13 +62,13 @@ export function DisplayArticles() {
                 <p>Loading ...</p>
             ) : (
                 <div>
-                    <span>{data?.searchArticle?.totalCount}</span>
+                    <span>{data?.searchScholarlyArticle?.totalCount}</span>
 
                     <ArticleList
-                        articleEdges={(data?.searchArticle?.edges as ScholarlyArticleEdge[]) || null}
+                        articleEdges={(data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[]) || null}
                         onLoadMore={() => fetchMore({
                             variables: {
-                                after: (data?.searchArticle?.edges as ScholarlyArticleEdge[])[(data?.searchArticle?.edges as ScholarlyArticleEdge[]).length - 1]?.cursor
+                                after: (data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[])[(data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[]).length - 1]?.cursor
                             },
                         })}
                     />

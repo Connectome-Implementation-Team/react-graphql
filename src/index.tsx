@@ -31,7 +31,7 @@ const client = new ApolloClient({
         typePolicies: {
             Query: {
                 fields: {
-                    searchArticle: {
+                    searchScholarlyArticle: {
                         // Don't cache separate results based on
                         // any of this field's arguments.
                         keyArgs: false,
