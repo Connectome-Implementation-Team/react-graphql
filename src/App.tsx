@@ -36,7 +36,7 @@ export function DisplayArticles() {
 
     const [
         getArticles,
-        {loading, data, fetchMore}
+        {loading, data, fetchMore, client}
     ] = useLazyQuery(
         GET_ARTICLES,
         {
@@ -52,17 +52,23 @@ export function DisplayArticles() {
         <div>
             <h3>Available articles</h3>
 
-            <input value={value} onChange={(e) => {
+            <input value={value} disabled={data !== undefined} onChange={(e) => {
+                // TODO: reset article list when search value changes
+
+                // client
+
+                console.log('value was changed');
+
                 setValue(e.target.value)
             }}/>
 
-            <button onClick={() => getArticles()}>Search</button>
+            <button onClick={() => getArticles()} disabled={data !== undefined}>Search</button>
 
             {loading ? (
                 <p>Loading ...</p>
             ) : (
-                <div>
-                    <span>{data?.searchScholarlyArticle?.totalCount}</span>
+                <div className="content">
+                    <div>Total: {data?.searchScholarlyArticle?.totalCount}</div>
 
                     <ArticleList
                         articleEdges={(data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[]) || null}

@@ -1,5 +1,6 @@
 import React from "react";
 import {Maybe, ScholarlyArticleEdge} from "./__generated__/graphql";
+import './ArticleList.scss'
 
 export const ArticleList = ({articleEdges, onLoadMore}: { articleEdges: Maybe<ScholarlyArticleEdge[]>, onLoadMore: () => void }) => {
 

@@ -1,9 +1,15 @@
-$myColor: pink;
+$linkColor: blue;
+$baseColor: black;
+$font: Helvetica;
 
 body {
   color: black;
 }
 
 a {
-  color: $myColor;
+  color: $linkColor;
+}
+
+.content {
+  padding: 10px;
 }

@@ -1,0 +1,6 @@
+@use 'App';
+
+ul {
+  font-family: App.$font;
+  color: App.$baseColor;
+}
