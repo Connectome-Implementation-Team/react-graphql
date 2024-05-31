@@ -12,9 +12,10 @@ export const ArticleList = ({articleEdges, onLoadMore}: { articleEdges: Maybe<Sc
                 <ul>
                     {articleEdges?.map((edge: ScholarlyArticleEdge) => (
 
-                        <li key={edge?.node.iri}><a href={edge?.node.sameAs ? edge.node.sameAs[0] : undefined}
+                        <li key={edge?.node.iri}>
+                            <a href={edge?.node.sameAs ? edge.node.sameAs[0] : undefined}
                                                     target="_blank no-referrer">{edge?.node.name}</a> ({edge?.node.author.map(
-                            auth => auth.sameAs ? <span><a href={auth.sameAs[0]} target="_blank no-referrer">{auth.name}</a> </span> : <span>{auth.name} </span>
+                            (auth, idx) => auth.sameAs ? <span key={idx}><a href={auth.sameAs[0]} target="_blank no-referrer">{auth.name}</a> </span> : <span key={idx}>{auth.name} </span>
                         )})</li>))}
                 </ul>
 

@@ -26,7 +26,7 @@ export type Book = Thing & {
   /** Abstract summarizing the content */
   abstract?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Author of the publication */
   author: Array<PersonOrganizationUnion>;
   /** License information */
@@ -75,7 +75,7 @@ export type DataDownload = Thing & {
   /** Abstract summarizing the content */
   abstract?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Author of the publication */
   author: Array<PersonOrganizationUnion>;
   /** License information */
@@ -112,7 +112,7 @@ export type Dataset = Thing & {
   /** Abstract summarizing the content */
   abstract?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Author of the publication */
   author: Array<PersonOrganizationUnion>;
   /** License information */
@@ -151,7 +151,7 @@ export type DatasetEdge = {
 export type GeoCoordinates = Thing & {
   __typename?: 'GeoCoordinates';
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Description of the resource */
   description?: Maybe<Scalars['String']['output']>;
   /** Identifier of the resource */
@@ -184,7 +184,7 @@ export type IriBox = {
 export type Organization = Thing & {
   __typename?: 'Organization';
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Description of the resource */
   description?: Maybe<Scalars['String']['output']>;
   /** Identifier of the resource */
@@ -271,7 +271,7 @@ export type PaginatedScholarlyArticle = {
 export type Person = Thing & {
   __typename?: 'Person';
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Description of the resource */
   description?: Maybe<Scalars['String']['output']>;
   /** A person's last name */
@@ -302,7 +302,7 @@ export type Place = Thing & {
   /** A place's address. */
   address?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Description of the resource */
   description?: Maybe<Scalars['String']['output']>;
   /** A place's geo coordinates. */
@@ -444,7 +444,7 @@ export type ResearchProject = Thing & {
   /** Abstract summarizing the content */
   abstract?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Description of the resource */
   description?: Maybe<Scalars['String']['output']>;
   /** End of the project */
@@ -493,7 +493,7 @@ export type ScholarlyArticle = Thing & {
   /** Abstract summarizing the content */
   abstract?: Maybe<Scalars['String']['output']>;
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Author of the publication */
   author: Array<PersonOrganizationUnion>;
   /** License information */
@@ -540,7 +540,7 @@ export type StringIriUnion = IriBox | StringBox;
 /** Thing is the base type of all other types */
 export type Thing = {
   /** Alternate name of the resource */
-  alternateName?: Maybe<Scalars['String']['output']>;
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
   /** Description of the resource */
   description?: Maybe<Scalars['String']['output']>;
   /** Identifier of the resource */
