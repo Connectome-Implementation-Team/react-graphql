@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './App.css';
+import './App.scss';
 import {useLazyQuery} from '@apollo/client';
 import {gql} from './__generated__/gql';
 import {ArticleList} from "./ArticleList";
@@ -82,7 +82,6 @@ export function DisplayArticles() {
 export default function App() {
     return (
         <div>
-            <h2>My first Apollo app 🚀</h2>
             <DisplayArticles/>
         </div>
     );
