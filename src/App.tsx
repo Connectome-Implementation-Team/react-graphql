@@ -10,6 +10,7 @@ const GET_ARTICLES = gql(/* GraphQL */ `
   query ARTICLES($query: String!, $first: Int, $after: String) {
     searchScholarlyArticle(query: $query, first: $first, after: $after) {
       totalCount
+      hasNextPage
       edges {
       cursor
         node {
@@ -84,6 +85,7 @@ export function DisplayArticles() {
 
                         {<ArticleList
                         articleEdges={(data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[]) || null}
+                        hasNextPage={data?.searchScholarlyArticle?.hasNextPage}
                         onLoadMore={() => fetchMore({
                             variables: {
                                 after: (data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[])[(data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[]).length - 1]?.cursor

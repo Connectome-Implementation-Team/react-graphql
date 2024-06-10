@@ -2,7 +2,7 @@ import React from "react";
 import {Maybe, ScholarlyArticleEdge} from "./__generated__/graphql";
 import './ArticleList.scss'
 
-export const ArticleList = ({articleEdges, onLoadMore}: { articleEdges: Maybe<ScholarlyArticleEdge[]>, onLoadMore: () => void }) => {
+export const ArticleList = ({articleEdges, hasNextPage, onLoadMore}: { articleEdges: Maybe<ScholarlyArticleEdge[]>, hasNextPage: boolean, onLoadMore: () => void }) => {
 
     return (
 
@@ -20,7 +20,7 @@ export const ArticleList = ({articleEdges, onLoadMore}: { articleEdges: Maybe<Sc
                         )})</li>))}
                 </ul>
 
-                {<button onClick={onLoadMore}>Load More</button>}
+                <button disabled={!hasNextPage} onClick={onLoadMore}>Load More</button>
             </div>
 
         )
