@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import './App.scss';
-import {useLazyQuery} from '@apollo/client';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import {gql} from './__generated__/gql';
 import {ArticleList} from "./ArticleList";
 import {ScholarlyArticleEdge} from "./__generated__/graphql";
+import {client} from "./index";
 
 const GET_ARTICLES = gql(/* GraphQL */ `
   query ARTICLES($query: String!, $first: Int, $after: String) {
@@ -32,9 +33,12 @@ const GET_ARTICLES = gql(/* GraphQL */ `
 
 export function DisplayArticles() {
 
-    const [value, setValue] = useState("artificial");
+    //console.log('init')
 
-    const [
+    const [value, setValue] = useState("artificial");
+    const [skip, setSkip] = useState(true);
+
+    /*const [
         getArticles,
         {loading, data, fetchMore, client}
     ] = useLazyQuery(
@@ -43,43 +47,51 @@ export function DisplayArticles() {
             variables: {
                 query: value,
                 first: 10,
-                after: undefined
-            }
-        }
-    );
+                after: undefined,
+            },
+        },
+    );*/
+
+    //const getArticles = () => {
+    const { data, loading, fetchMore  } = useQuery(GET_ARTICLES, { variables: {
+            query: value,
+            first: 10,
+            after: undefined
+        }, skip: skip, client: client})
+    //}
+
+    console.log()
 
     return (
         <div>
             <h3>Available articles</h3>
 
-            <input value={value} disabled={data !== undefined} onChange={(e) => {
-                // TODO: reset article list when search value changes
+            <input value={value} onChange={(e) => {
 
-                // client
+                //console.log('value was changed ', value);
 
-                console.log('value was changed');
-
+                setSkip(true);
                 setValue(e.target.value)
             }}/>
 
-            <button onClick={() => getArticles()} disabled={data !== undefined}>Search</button>
+                <button disabled={data !== undefined} onClick={() => setSkip(false)}>Search</button>
 
             {loading ? (
                 <p>Loading ...</p>
             ) : (
-                <div className="content">
+                data &&  (<div className="content">
                     <div>Total: {data?.searchScholarlyArticle?.totalCount}</div>
 
-                    <ArticleList
+                        {<ArticleList
                         articleEdges={(data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[]) || null}
                         onLoadMore={() => fetchMore({
                             variables: {
                                 after: (data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[])[(data?.searchScholarlyArticle?.edges as ScholarlyArticleEdge[]).length - 1]?.cursor
                             },
                         })}
-                    />
+                    />}
 
-                </div>
+                </div>)
             )}
         </div>
     )

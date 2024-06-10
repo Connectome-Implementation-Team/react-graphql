@@ -20,7 +20,7 @@ export const ArticleList = ({articleEdges, onLoadMore}: { articleEdges: Maybe<Sc
                         )})</li>))}
                 </ul>
 
-                <button onClick={onLoadMore}>Load More</button>
+                {<button onClick={onLoadMore}>Load More</button>}
             </div>
 
         )
