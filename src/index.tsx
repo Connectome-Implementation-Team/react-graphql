@@ -14,7 +14,7 @@ const httpLink = createHttpLink({
 // https://www.apollographql.com/docs/react/networking/authentication/
 const authLink = setContext((_, { headers }) => {
 
-    const token = '';
+    const token = process.env.REACT_APP_NOT_SECRET_CODE;
     // return the headers to the context so httpLink can read them
     return {
         headers: {
