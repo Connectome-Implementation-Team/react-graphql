@@ -24,7 +24,7 @@ const authLink = setContext((_, { headers }) => {
     }
 });
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
     //uri: 'https://opendatanavigator-test.switch.ch/api/graphql',
     link: authLink.concat(httpLink),
     cache: new InMemoryCache({
@@ -39,6 +39,8 @@ const client = new ApolloClient({
                         // Concatenate the incoming list items with
                         // the existing list items.
                         merge(existing = undefined, incoming) {
+                            //console.log('cache', existing)
+
                             if (existing !== undefined) {
                                 const articles = {
                                     edges: existing?.edges?.concat(incoming?.edges),

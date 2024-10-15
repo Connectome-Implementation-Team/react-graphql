@@ -18,6 +18,74 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+/** An archive component */
+export type ArchiveComponent = Thing & {
+  __typename?: 'ArchiveComponent';
+  /** Relation to another resource */
+  about?: Maybe<Array<ResultUnion>>;
+  /** Abstract summarizing the content */
+  abstract?: Maybe<Scalars['String']['output']>;
+  /** Alternate name of the resource */
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
+  /** Author of the publication */
+  author: Array<PersonOrganizationUnion>;
+  /** License information */
+  conditionsOfAccess?: Maybe<Scalars['String']['output']>;
+  /** Date of publication */
+  datePublished?: Maybe<Scalars['DateTime']['output']>;
+  /** Description of the resource */
+  description?: Maybe<Scalars['String']['output']>;
+  /** ArchiveOrganization that holds, keeps or maintains the ArchiveComponent. */
+  holdingArchive?: Maybe<Array<ArchiveOrganization>>;
+  /** Identifier of the resource */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The content's language */
+  inLanguage?: Maybe<Array<Scalars['String']['output']>>;
+  /** Connectome identifier of the resource */
+  iri: Scalars['ID']['output'];
+  /** Open Access */
+  isAccessibleForFree?: Maybe<Scalars['Boolean']['output']>;
+  /** Current location of the item. */
+  itemLocation?: Maybe<Array<Place>>;
+  /** Keywords describing the content */
+  keywords?: Maybe<Array<StringIriUnion>>;
+  /** name (title) of the resource */
+  name: Scalars['String']['output'];
+  /** Standard identifier (DOI, ORCID etc.) */
+  sameAs?: Maybe<Array<Scalars['String']['output']>>;
+  /** Spatial information */
+  spatialCoverage?: Maybe<Array<Place>>;
+};
+
+export type ArchiveComponentEdge = {
+  __typename?: 'ArchiveComponentEdge';
+  cursor: Scalars['String']['output'];
+  node: ArchiveComponent;
+};
+
+/** An organization with archival holdings */
+export type ArchiveOrganization = Thing & {
+  __typename?: 'ArchiveOrganization';
+  /** Alternate name of the resource */
+  alternateName?: Maybe<Array<Scalars['String']['output']>>;
+  /** Description of the resource */
+  description?: Maybe<Scalars['String']['output']>;
+  /** Identifier of the resource */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** Connectome identifier of the resource */
+  iri: Scalars['ID']['output'];
+  /** name (title) of the resource */
+  name: Scalars['String']['output'];
+  /** Standard identifier (DOI, ORCID etc.) */
+  sameAs?: Maybe<Array<Scalars['String']['output']>>;
+};
+
+export type ArchiveOrganizationEdge = {
+  __typename?: 'ArchiveOrganizationEdge';
+  cursor: Scalars['String']['output'];
+  node: ArchiveOrganization;
+};
+
 /** A book publication */
 export type Book = Thing & {
   __typename?: 'Book';
@@ -326,14 +394,17 @@ export enum Provider {
   Boris = 'boris',
   Cordis = 'cordis',
   Dasch = 'dasch',
+  Edk = 'edk',
   Lory = 'lory',
   Memobase = 'memobase',
   Openalex = 'openalex',
   Opendata = 'opendata',
   Orcid = 'orcid',
+  Patrinum = 'patrinum',
   Serval = 'serval',
   Snsf = 'snsf',
   Swissubase = 'swissubase',
+  Worldbank = 'worldbank',
   Zora = 'zora'
 }
 
@@ -344,7 +415,7 @@ export type Query = {
   /** Search for related Open Access publications */
   getRelatedCreativeWork: PaginatedCreativeWorkUnion;
   /** Search for resources suggested by neural search */
-  getSuggestionByNeuralSearch: PaginatedResultUnion;
+  getSuggestionByNeuralSearch: Array<ResultUnion>;
   /** Search for resources such as scholarly articles, books, research projects etc. */
   search: PaginatedResultUnion;
   /** Search for books */
@@ -376,9 +447,10 @@ export type QueryGetRelatedCreativeWorkArgs = {
 
 
 export type QueryGetSuggestionByNeuralSearchArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  provider?: InputMaybe<Provider>;
   query: Scalars['String']['input'];
+  type?: InputMaybe<ResourceType>;
 };
 
 
@@ -477,7 +549,7 @@ export enum ResourceType {
   ScholarlyArticle = 'ScholarlyArticle'
 }
 
-export type ResultUnion = Book | Dataset | Organization | Person | ResearchProject | ScholarlyArticle;
+export type ResultUnion = ArchiveComponent | ArchiveOrganization | Book | Dataset | Organization | Person | ResearchProject | ScholarlyArticle;
 
 export type ResultUnionEdge = {
   __typename?: 'ResultUnionEdge';
@@ -562,5 +634,13 @@ export type ArticlesQueryVariables = Exact<{
 
 export type ArticlesQuery = { __typename?: 'Query', searchScholarlyArticle: { __typename?: 'PaginatedScholarlyArticle', totalCount: number, hasNextPage: boolean, edges?: Array<{ __typename?: 'ScholarlyArticleEdge', cursor: string, node: { __typename?: 'ScholarlyArticle', iri: string, name: string, sameAs?: Array<string> | null, abstract?: string | null, author: Array<{ __typename: 'Organization' } | { __typename: 'Person', name: string, sameAs?: Array<string> | null }> } }> | null } };
 
+export type FetchQueryVariables = Exact<{
+  iri: Scalars['ID']['input'];
+}>;
+
+
+export type FetchQuery = { __typename?: 'Query', fetch: { __typename?: 'ArchiveComponent', name: string } | { __typename?: 'ArchiveOrganization', name: string } | { __typename?: 'Book', name: string } | { __typename?: 'Dataset', name: string } | { __typename?: 'Organization', name: string } | { __typename?: 'Person', name: string } | { __typename?: 'ResearchProject', name: string } | { __typename?: 'ScholarlyArticle', name: string } };
+
 
 export const ArticlesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ARTICLES"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"query"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchScholarlyArticle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"Variable","name":{"kind":"Name","value":"query"}}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"iri"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sameAs"}},{"kind":"Field","name":{"kind":"Name","value":"abstract"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Person"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sameAs"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ArticlesQuery, ArticlesQueryVariables>;
+export const FetchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FETCH"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"iri"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fetch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"iri"},"value":{"kind":"Variable","name":{"kind":"Name","value":"iri"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ScholarlyArticle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Book"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Dataset"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ResearchProject"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Person"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArchiveComponent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Organization"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArchiveOrganization"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<FetchQuery, FetchQueryVariables>;
