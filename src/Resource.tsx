@@ -1,6 +1,7 @@
 import {gql} from "./__generated__";
 import {useQuery} from "@apollo/client";
 import {ScholarlyArticleDisplay} from "./ScholarlyArticleDisplay";
+import {PersonOrganizationUnion} from "./__generated__/graphql";
 
 
 
@@ -21,6 +22,11 @@ const FETCH_RESOURCE = gql(`
                 description
                 author {
                     ... on Person {
+                        iri
+                        name
+                    }
+                    ... on Organization {
+                        iri
                         name
                     }
                 }
@@ -34,6 +40,16 @@ const FETCH_RESOURCE = gql(`
             ... on Dataset {
                 name
                 description
+                author {
+                    ... on Person {
+                        iri
+                        name
+                    }
+                    ... on Organization {
+                        iri
+                        name
+                    }
+                }
             }
             
             ... on ResearchProject {
@@ -80,9 +96,13 @@ export const Resource = ({id}: { id: string }) => {
     }
 
     if (data?.fetch.__typename === 'ScholarlyArticle') {
-
-        return <ScholarlyArticleDisplay author={[]} iri={data.fetch.iri} __typename={data.fetch.__typename} name={data.fetch.name}
+        return <ScholarlyArticleDisplay author={(data.fetch.author as PersonOrganizationUnion[])} iri={data.fetch.iri} __typename={data.fetch.__typename} name={data.fetch.name}
                                         abstract={data.fetch.abstract}></ScholarlyArticleDisplay>
+    } else if (data?.fetch.__typename === 'Dataset') {
+        //data?.fetch.__typename
+
+        //console.log(data.fetch.author)
+
     }
 
     return <>

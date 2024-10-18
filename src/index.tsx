@@ -1,9 +1,8 @@
-import React from 'react';
+import React, {StrictMode} from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-import {ApolloClient, ApolloProvider, createHttpLink, gql, InMemoryCache} from "@apollo/client";
+import {ApolloClient, ApolloProvider, createHttpLink, InMemoryCache} from "@apollo/client";
 import {PaginatedScholarlyArticle} from "./__generated__/graphql";
 import {setContext} from "@apollo/client/link/context";
 
@@ -12,7 +11,7 @@ const httpLink = createHttpLink({
 });
 
 // https://www.apollographql.com/docs/react/networking/authentication/
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext((_, {headers}) => {
 
     const token = process.env.REACT_APP_NOT_SECRET_CODE;
     // return the headers to the context so httpLink can read them
@@ -67,6 +66,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
     <ApolloProvider client={client}>
-        <App />
-    </ApolloProvider>,
+        <StrictMode>
+            <App/>
+        </StrictMode>
+    </ApolloProvider>
+    ,
 );
